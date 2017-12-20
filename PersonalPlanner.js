@@ -1,9 +1,9 @@
-var login_btn = document.querySelector("#login_btn");
-
+var login_btn = document.getElementById("login_btn");
+login_btn.addEventListener('click', logIn);
 
 function logIn(event){
-	var email = document.querySelector("#email_txt").value;
-	var password = document.querySelector("#password_txt").value;
+	var email = document.getElementById("email_txt").value;
+	var password = document.getElementById("password_txt").value;
 	
 	firebase.auth().signInWithEmailAndPassword(email, password)
     .catch(function(error) {
@@ -22,8 +22,8 @@ function logIn(event){
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
-    window.location.href = "home.html"
+    window.location.href = "AddInterest.html"
   }
 });
 
-login_btn.addEventListener('click', logIn);
+
