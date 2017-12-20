@@ -1,33 +1,36 @@
-var registration_form = document.getElementById("registration_form");
+var submit2_btn = document.getElementById("submit2_btn");
+submit2_btn.addEventListener("click" , handleSubmission);
+	
 
 function handleSubmission(event){
 
-	var username = registration_form.elements.username;
-	var password = registration_form.elements.password;
-	var confirm = registration_form.elements.confirm;
-	var interests = registration_form.elements.interests;
+	var email = document.getElementById("email").value; 
+	var username = document.getElementById("username");
+	var password = document.getElementById("password").value;
+	var confirm = document.getElementById("confirm");
+		
 
-	var interestsArray = [];
+	console.log("handleSubmission Worked");
 
-	for(var i=0; i< interests.length; i++){
-		if(interests[i].checked){
-			interestsArray.push(interests[i].value);
-		}
+	firebase.auth().createUserWithEmailAndPassword(email, password)
+  .catch(function(error) {
+	  // Handle Errors here.
+	  var errorCode = error.code;
+	  var errorMessage = error.message;
+	  if (errorCode === 'auth/wrong-password') {
+	    alert('Wrong password.');
+	  } else {
+	    alert(errorMessage);
+	  }
+	  console.log(error);
+	});
+
 	}
-
-	if(username.value.length <3){
-		alert("Please make sure your username has more than 3 letters");
-		event.preventDefault();
-		username.focus();
-		return false;
-	}
-}	
 	
-	if(password.value.length <3){
-		alert("Please make sure your password has more than 3 characters")
-		event.preventDefault();
-		password.focus();
-		return false;
-	}
+	//window.location.href ="AddInterest.html";
 
-registration_form.addEventListener("submit" , handleSubmission)
+
+
+
+
+
