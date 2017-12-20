@@ -1,102 +1,29 @@
-(function($)
-{
-    /**
-     * Auto-growing textareas; technique ripped from Facebook
-     *
-     * https://github.com/jaz303/jquery-grab-bag/tree/master/javascripts/jquery.autogrow-textarea.js
-     */
-    $.fn.autogrow = function(options)
-    {
-        return this.filter('textarea').each(function()
-        {
-            var self         = this;
-            var $self        = $(self);
-            var minHeight    = $self.height();
-            var noFlickerPad = $self.hasClass('autogrow-short') ? 0 : parseInt($self.css('lineHeight')) || 0;
-
-            var shadow = $('<div></div>').css({
-                position:    'absolute',
-                top:         -10000,
-                left:        -10000,
-                width:       $self.width(),
-                fontSize:    $self.css('fontSize'),
-                fontFamily:  $self.css('fontFamily'),
-                fontWeight:  $self.css('fontWeight'),
-                lineHeight:  $self.css('lineHeight'),
-                resize:      'none',
-                'word-wrap': 'break-word'
-            }).appendTo(document.body);
-
-            var update = function(event)
-            {
-                var times = function(string, number)
-                {
-                    for (var i=0, r=''; i<number; i++) r += string;
-                    return r;
-                };
-
-                var val = self.value.replace(/</g, '&lt;')
-                                    .replace(/>/g, '&gt;')
-                                    .replace(/&/g, '&amp;')
-                                    .replace(/\n$/, '<br/>&nbsp;')
-                                    .replace(/\n/g, '<br/>')
-                                    .replace(/ {2,}/g, function(space){ return times('&nbsp;', space.length - 1) + ' ' });
-
-                // Did enter get pressed?  Resize in this keydown event so that the flicker doesn't occur.
-                if (event && event.data && event.data.event === 'keydown' && event.keyCode === 13) {
-                    val += '<br />';
-                }
-
-                shadow.css('width', $self.width());
-                shadow.html(val + (noFlickerPad === 0 ? '...' : '')); // Append '...' to resize pre-emptively.
-                $self.height(Math.max(shadow.height() + noFlickerPad, minHeight));
-            }
-
-            $self.change(update).keyup(update).keydown({event:'keydown'},update);
-            $(window).resize(update);
-
-            update();
-        });
-    };
-})(jQuery);
 
 
-var noteTemp =  '<div class="note">'
-                +   '<a href="javascript:;" class="button remove">X</a>'
-                +   '<div class="note_cnt">'
-                +       '<textarea class="title" placeholder="Enter note title"></textarea>'
-                +       '<textarea class="cnt" placeholder="Enter note description here"></textarea>'
-                +   '</div> '
-                +'</div>';
-
-var noteZindex = 1;
-function deleteNote(){
-    $(this).parent('.note').hide("puff",{ percent: 133}, 250);
-};
-
-function newNote() {
-  $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
-    function(){
-       $(this).zIndex(++noteZindex);
-    });
- 
-    $('.remove').click(deleteNote);
-    $('textarea').autogrow();
-    
-  $('.note')
-    return false; 
-};
+var newNote_btn = document.querySelector("#newNote_btn");
+//unorganized list element
+var myNotes = document.querySelector("#myNotes");
+//text field
+var name_txt = document.querySelector("#name_txt");
 
 
+//create a listener for when i click on the button
+newNote_btn.addEventListener("click", handleAddNewNote);
 
-$(document).ready(function() {
-    
-    $("#board").height($(document).height());
-    
-    $("#add_new").click(newNote);
-    
-    $('.remove').click(deleteNote);
-    newNote();
-      
-    return false;
-});
+function handleAddNewNote(event){
+  //create a new list item
+  var listNote = document.createElement("li"); 
+  //get the value from the text input field
+  var nameValue = name_txt.value;
+  console.log("ADD NEW NOTE " + nameValue);
+  //create a text node that we will add to the list item
+  var textElement = document.createTextNode(nameValue);
+  //add the text into the list item
+  listNote.append(textElement);  
+  //add this list item to the <ul> list as an <li>
+  myNotes.append(listNote);
+  //Once the new item is done empty the text field
+  name_txt.value = "";
+  //Make that text field be in focus so I could start typing automatically
+  name_txt.focus();
+}
